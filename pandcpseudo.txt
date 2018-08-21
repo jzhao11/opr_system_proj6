@@ -1,0 +1,58 @@
+pseudo goes here
+
+1. Bounded Buffer
+i). Initialize
+bounded_buffer = alloc(sizeof(int) * BUFFER_SIZE);
+
+ii). Enqueue
+enqueue_item(next_enqueued) {
+	buffer[in] = next_enqueued;
+	in = (in + 1) % BUFFER_SIZE;
+	return next_enqueued;
+}
+
+iii). Dequeue
+dequeue_item() {
+	next_dequeued = buffer[out];
+	out = (out + 1) % BUFFER_SIZE;
+	return next_enqueued;
+}
+
+
+
+2. Producer
+// counter starting at 0
+producer_func(void* param) {
+	for (int i = 0; i < P; ++i) {
+		wait(empty);
+		wait(mutex);
+		counter++;
+		int tmp = enqueue_item(counter);
+		producer_array[next] = tmp;
+		signal(mutex);
+		signal(full);
+	}
+}
+
+
+
+3. Consumer
+consumer_func(void* param) {
+	for (int i = 0; i < C; ++i) {
+		wait(full);
+		wait(mutex);
+		int tmp = dequeue_item();
+		consumer_array[next] = tmp;
+		signal(mutex);
+		signal(empty);
+	}
+}
+
+
+
+4. Testing Strategy
+A global atomic counter is used to generate numbers for producer threads. To guarantee synchronization, the semaphore mutex will work as a mutex lock, where each thread function will acquire it before entering the critical section (accessing the global shared resource) and release it after exiting the critical section.
+
+The main function will initialize the bounded buffer and related parameters using the command line arguments. Then it will create producer and consumer threads, with each of them calling corresponding thread function. The producer function will repeatedly produce unique numbers (with info printed on terminal) by using the global counter, and enqueue the integers to the bounded buffer. By contrast, the consumer function will repeatedly dequeue integers stored in the buffer, and consume it (with info printed). Semaphores full and empty are working together to ensure that each produced item will be enqueued only when the buffer is not full, and that each consumed item will be dequeued only when the buffer is not empty. At last, all threads will join the main process and the main() will finalize.
+
+Each item produced by a producer thread will be collected in a producer array, while each item consumed by a consumer will also be stored in a consumer array. These two arrays will be compared and printed to check whether a series of unique numbers are produced, and whether they are consumed in the same order. If producer and consumer arrays match and those unique numbers are correctly ordered, it proves that the producers and consumers are executed in a correct sequence.
