@@ -1,2 +1,4 @@
-# opr_system_proj6
-producer and consumer
+# producer and consumer
+# project for operating system
+# author: jianfei zhao
+# github: https://github.com/jzhao11
