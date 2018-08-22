@@ -1,13 +1,9 @@
-Name  : Jianfei Zhao
-Date  : 07/28/2018
-Class : CSC415-01
-
-Compile Instructions:
+# Build Instructions:
 make
 By using the original Makefile (with gcc command included) in the repo, the instruction "make" (under the repo csc415-p5-jzhao11/part2) can build the program and generate the executable file "pandc".
 
 
-Run Instructions:
+# Run Instructions:
 ./pandc N P C X Ptime Ctime
 This instruction is also executed under csc415-p5-jzhao11/part2, which runs the executable file "pandc" with 6 parameters. Descriptions about these parameters are listed as follows.
 N: number of buffers
@@ -18,7 +14,7 @@ Ptime: time each producer sleeps (in seconds)
 Ctime: time each consumer sleeps (in seconds)
 
 
-Project Description:
+# Project Description:
 A global atomic counter is used to generate numbers for producer threads. To guarantee synchronization, the semaphore mutex will work as a mutex lock, where each thread function will acquire it before entering the critical section (accessing the global shared resource) and release it after exiting the critical section.
 
 The main function will initialize the bounded buffer and related parameters using the command line arguments. Then it will create producer and consumer threads, with each of them calling corresponding thread function. The producer function will repeatedly produce unique numbers (with info printed on terminal) by using the global counter, and enqueue the integers to the bounded buffer. By contrast, the consumer function will repeatedly dequeue integers stored in the buffer, and consume it (with info printed). Semaphores full and empty are working together to ensure that each produced item will be enqueued only when the buffer is not full, and that each consumed item will be dequeued only when the buffer is not empty. At last, all threads will join the main process and the main() will finalize.
